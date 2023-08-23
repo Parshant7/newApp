@@ -12,6 +12,3 @@ module.exports.validateExpressValidatorResult = (req, res, next) => {
     
     next();
 }
-
-
-

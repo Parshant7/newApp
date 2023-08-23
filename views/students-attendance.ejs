@@ -1,0 +1,36 @@
+<%- include('partials/header'); -%>
+
+<div class="container">    
+    <h1 class="mb-5">Class <%= teacher.assignedClass %></h1>
+    <h3 class="mb-5">Attendance Sheet</h3>
+    <div class="error other"></div>
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">email</th>
+        <th scope="col">Total Classes</th>
+        <th scope="col">Attended Classes</th>
+        <th scope="col">update</th>
+      </tr>
+    </thead>
+    <tbody class="Student-table-body">
+      <% var sno = 1; %>
+      <% students.forEach((student)=>{%>
+        <tr>
+          <td><%= sno++ %></td>
+          <td><%= student.name.fname %> <%= student.name.lname %></td>
+          <td><%= student.email %></td>
+          <td><input type="number" name="totalLec" value="<%= student.attendance.totalLec %>" min="0" max="100"></td>
+          <td><input type="number" name="attendedLec" value="<%= student.attendance.attendedLec %>" min="0" max="100"></td>
+          <td><button id="<%= student._id %>" class="update-attendance-button">update</button></td>
+          <td><div class="acknowledgement"></div></td>
+        </tr>
+      <% }); %>
+
+    </tbody>
+  </table>
+</div>
+  
+<%- include('partials/footer'); -%>

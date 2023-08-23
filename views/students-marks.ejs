@@ -1,0 +1,52 @@
+<%- include('partials/header'); -%>
+
+<div class="container">
+    
+    <h1 class="mb-5">Debit Transactions</h1>
+    <div class="error other"></div>
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">email</th>
+        <th scope="col">Maths</th>
+        <th scope="col">Science</th>
+        <th scope="col">English</th>
+        <th scope="col">Behavioral Grades</th>
+        <th scope="col">update</th>
+      </tr>
+    </thead>
+    <tbody class="Student-table-body">
+      <% var sno = 1, allGrades = ["Pending", "A+", "A", "B+", "B", "C", "D", "F"]; %>
+      <% students.forEach((student)=>{%>
+        <tr>
+          <td><%= sno++ %></td>
+          <td><%= student.name.fname %> <%= student.name.lname %></td>
+          <td><%= student.email %></td>
+          <td><input type="number" name="maths-marks" value="<%= student.marks.maths %>" min="0" max="100"></td>
+          <td><input type="number" name="science-marks" value="<%= student.marks.science %>" min="0" max="100"></td>
+          <td><input type="number" name="english-marks" value="<%= student.marks.english %>" min="0" max="100"></td>
+          <td>
+            <select name="behavioralGrade" id="">
+              <% allGrades.forEach((grade)=>{ %>
+                <option value="<%= grade %>"
+                  <% if(student.behavioralGrade === grade){ %>
+                    selected
+                  <% } %>
+                  >
+                  <%= grade %>
+                </option>
+              <% }); %>
+            </select>
+          </td>
+          <td><button id="<%= student._id %>" class="update-button">update</button></td>
+          <td><div class="acknowledgement"></div></td>
+        </tr>
+      <% }); %>
+
+    </tbody>
+  </table>
+</div>
+  
+<%- include('partials/footer'); -%>

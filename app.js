@@ -8,7 +8,7 @@ const debitRoutes = require('./routes/debitRoutes.js');
 const creditRoutes = require('./routes/creditRoutes.js');
 const treatRoutes = require('./routes/treatRoutes.js');
 
-const {jwtAuthenticationMiddleware} = require('./middlewares/authentication.js');
+const {requireAuth} = require('./middlewares/authentication.js');
 
 const path = require('path');
 
@@ -23,18 +23,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
 
-app.use('/admin/', adminRoutes);
-app.use('/debit/', jwtAuthenticationMiddleware, debitRoutes);
-app.use('/credit/', jwtAuthenticationMiddleware, creditRoutes);
-app.use('/treat/', jwtAuthenticationMiddleware, treatRoutes);
+app.use('/', adminRoutes);
+app.use('/debit/', requireAuth, debitRoutes);
+app.use('/credit/', requireAuth, creditRoutes);
+app.use('/treat/', requireAuth, treatRoutes);
 
 
 mongoose.connect(DBURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => console.log("connected to db"))
   .catch((err) => console.log(err));  
 
-app.get('/', (req, res)=>{
-  res.json("home");
+app.get('/', requireAuth, (req, res)=>{
+  res.render("home");
 });
 
 app.listen(PORT, ()=>{

@@ -3,6 +3,7 @@ const Admin = require('../models/Admin.js');
 const { messages, responseStatus, statusCode } = require("../core/constant/constant");
 const { hash, compare } = require("bcrypt");
 
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 module.exports.jwtAuthenticationMiddleware = async (req, res, next) => {
     try {
@@ -21,7 +22,7 @@ module.exports.jwtAuthenticationMiddleware = async (req, res, next) => {
         console.log(jwt_token);
 
         // verify the token given by user for authentication
-        jwt.verify(jwt_token, process.env.JWT_SECRET_KEY, async (err, data) => {
+        jwt.verify(jwt_token, JWT_SECRET_KEY, async (err, data) => {
             if (err) {
                 return res.status(statusCode.Bad_request).json({ Messages: err.message ,ResponseStatus: responseStatus.failure});
             } else {
@@ -42,5 +43,31 @@ module.exports.jwtAuthenticationMiddleware = async (req, res, next) => {
     }
 };
 
+module.exports.requireAuth = (req, res, next) => {
+    const token = req.cookies.jwt;
+    console.log("reached");
+    // check json web token exists & is verified
+    
+    if (token) {
+        
+        const jwt_token = (token).split(' ')[1];
+
+        jwt.verify(jwt_token, JWT_SECRET_KEY, (err, decodedToken) => {
+        if (err) {
+          console.log(err.message);
+          res.redirect('/login');
+        } else {
+          console.log(decodedToken);
+          // if token has role admin
+          if (decodedToken.role !== 'admin'){
+            return res.redirect('/login');
+          }
+          next();
+        }
+      });
+    } else {
+      res.redirect('/login');
+    }
+  };
 
 

@@ -1,0 +1,64 @@
+<%- include('partials/header'); -%>
+
+<div class="container">
+    
+    <h1 class="mb-5">Debit Transactions</h1>
+    <div class="error other"></div>
+    
+    <a href="/debit"><button class="btn btn-secondary">Back</button></a>
+
+    <form method="post" class="getDebitTransactions">
+        <table class="table getTransactions-table">
+            <thead>
+                <tr>
+                    <th scope="col">From</th>
+                    <th scope="col">To</th>
+                    <th scope="col">Expenditure Type</th>
+                    <th scope="col">Other Expenditure Type</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td scope="row"><input type="date" name="fromDate"></td>
+                    <td scope="row"><input type="date" name="toDate"></td>
+
+                    <td>
+                      <select name="expenditureType">
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Grocery">Grocery</option>
+                        <option value="Shake">Shake</option>
+                        <option value="Others">Others</option>
+                      </select>
+                    </td>
+                    <td><input type="string" name="otherExpenditureType"></td>
+                    <td><input type="number" name="amount" ></td>
+                    <td><input type="string" name="remarks"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="submit">fetch Record</button>
+        <div class="acknowledgement"></div>
+    </form>
+
+    <table class="mt-6 table debit-records-table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date</th>
+                <th scope="col">Expenditure Type</th>
+                <th scope="col">Other Expenditure Type</th>
+                <th scope="col">Remarks</th>
+                <th scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody class="debit-records-table-body">
+        </tbody>
+    </table>
+</div>
+  
+<%- include('partials/footer'); -%>

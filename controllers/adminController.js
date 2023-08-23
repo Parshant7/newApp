@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const Admin = require("../models/Admin");
+const {handleErrors} = require("../helper/helperFunctions");
 
 // create json web token
 const MAXAGE = process.env.TOKEN_AGE;
@@ -20,18 +21,34 @@ module.exports.login_post = async (req, res)=>{
             return res.status(statusCode.Bad_request).json({
                 message: messages.unauthorizedEmail,
                 ResponseStatus: responseStatus.failure,
+                errors: [{
+                    msg: messages.unauthorizedEmail,
+                    path: "email",
+                }]
               });
         }
 
-        if(bcrypt.compare(req.body.password, admin.password)){
-            const token = jwt.sign({ email: admin.email }, TOKENSECRET, {
+        if(await bcrypt.compare(req.body.password, admin.password)){
+            const token = jwt.sign({ email: admin.email, role: "admin" }, TOKENSECRET, {
                 expiresIn: MAXAGE,
             });
+
+            res.cookie('jwt', `Bearer ${token}`, { httpOnly: true, maxAge: MAXAGE});
 
             return res.status(statusCode.Created).json({
                 message: messages.loginSuccess,
                 ResponseStatus: responseStatus.success,
                 jwToken: token,
+            });
+        }
+        else {
+            return res.status(statusCode.Bad_request).json({
+                message: messages.UnauthorizedPassword,
+                ResponseStatus: responseStatus.failure,
+                errors: [{
+                    msg: messages.UnauthorizedPassword,
+                    path: "password",
+                }]
             });
         }
 
@@ -40,6 +57,10 @@ module.exports.login_post = async (req, res)=>{
       res.status(statusCode.Bad_request).json({
         messages: messages.loginError,
         ResponseStatus: responseStatus.failure,
+        errors: [{
+            msg: messages.serverErr,
+            path: "other",
+        }]
       });
     }
 }

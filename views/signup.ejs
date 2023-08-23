@@ -1,54 +1,51 @@
 <%- include('partials/header'); -%>
 
-<form action="/signup">
-  <h2>Sign up</h2>
-  <label for="email">Email</label>
-  <input type="text" name="email" required />
-  <div class="email error"></div>
-  <label for="password">Password</label>
-  <input type="password" name="password" required />
-  <div class="password error"></div>
-  <button>Sign up</button>
-</form>
+<form action="/signup" method='post' class="signup">
+  <h2>Send Request</h2>
+  <div class="separate-section">
 
-<%- include('partials/footer'); -%>
+    <label>First name<input type="text" name="fname" required></label><div class="fname error"></div>
+    <label>Last name<input type="text" name="lname"></label><div class="lname error"></div>
+    <label>Date of Birth<input type="date" name="dob" required></label><div class="dob error"></div>
+    <label for="gender">Choose gender:
+      <select name="gender" required>
+        <option value="female">Female</option>
+        <option value="male">male</option>
+        <option value="other">other</option>
+      </select>
+    </label><div class="gender error"></div>
+    
+    <label style="width: 300px;">Do You have previous teaching experience: 
+      <label style="display:inline-block">
+        <input type="radio" name="isExperienced" style="display: inline;width: 19px;" value="true">
+        Yes</label>
+        <label style="display:inline">
+        <input type="radio" name="isExperienced" style="display: inline;width: 19px;" value="false" checked>
+        No</label>
+    </label>
+    <label for="standard">Choose standard to teach:
+      <select name="preferredclass" required>
+        <option value="1">1st</option>
+        <option value="2">2nd</option>
+        <option value="3">3rd</option>
+        <option value="4">4th</option>
+        <option value="5">5th</option>
+        <option value="6">6th</option>
+        <option value="7">7th</option>
+        <option value="8">8th</option>
+        <option value="9">9th</option>
+        <option value="10">10th</option>
+      </select>
+    </label><div class="standard error"></div>
+    <label>Mobile number<input type="number" name="mobile" required></label><div class="mobile error"></div>  
+    <label>Enter Email<input type="email" name="email" required></label><div class="email error"></div>
+    <label>Choose Password<input type="password" name="password" required></label><password class="password error"></password>
+    <input type="submit" value="send resume">
+  </div>
+</form>
+  
+  <%- include('partials/footer'); -%>
 
 <script>
-  const form = document.querySelector('form');
-  const emailError = document.querySelector('.email.error');
-  const passwordError = document.querySelector('.password.error');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // reset errors
-    emailError.textContent = '';
-    passwordError.textContent = '';
-
-    // get values
-    const email = form.email.value;
-    const password = form.password.value;
-
-    try {
-      const res = await fetch('/signup', { 
-        method: 'POST', 
-        body: JSON.stringify({ email, password }),
-        headers: {'Content-Type': 'application/json'}
-      });
-      const data = await res.json();
-      console.log(data);
-      if (data.errors) {
-        emailError.textContent = data.errors.email;
-        passwordError.textContent = data.errors.password;
-      }
-      if (data.user) {
-        location.assign('/');
-      }
-
-    }
-    catch (err) {
-      console.log(err);
-    }
-
-  });
+  
 </script>

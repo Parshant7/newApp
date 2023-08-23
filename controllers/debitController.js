@@ -33,7 +33,76 @@ module.exports.postDebitTransaction = async (req, res)=>{
       res.status(statusCode.Bad_request).json({
         messages: messages.transactionFailure,
         ResponseStatus: responseStatus.failure,
+        errors: [{
+          path: "other",
+          msg: messages.transactionFailure
+        }]
       });
     }
+}
+
+module.exports.get_debitPage = async (req, res)=>{
+  res.render("debit_home");
+}
+
+module.exports.get_records_page = async (req, res)=>{
+  res.render("debit_records");
+}
+
+module.exports.getDebitRecords = async (req, res)=>{
+  console.log(req.body);
+
+  try{
+      var fromDate = req.body.fromDate;
+      var toDate = req.body.toDate;
+      var expenditureType =  req.body.expenditureType;
+      var otherExpenditureType = req.body.otherExpenditureType;
+      var amount = req.body.amount;
+      var remarks = req.body.remarks;
+
+      var filterObj = {};
+
+      if(fromDate){
+        filterObj["date"] = { $gte: new Date(fromDate)};
+      }
+      if(toDate){
+        filterObj["date"] = { $lte: new Date(toDate)};
+      }
+      if(expenditureType){
+        filterObj["expenditureType"] = { $eq: expenditureType};
+      }
+      if(otherExpenditureType){
+        filterObj["otherExpenditureType"] = { $eq: otherExpenditureType};
+      }
+      if(amount){
+        filterObj["amount"] = { $eq: amount};
+      }
+      if(remarks){
+        filterObj["remarks"] = { $eq: remarks};
+      }
+      
+      console.log("this is filter object", filterObj);
+
+      let records = await Debit.find(filterObj);
+
+      console.log("fetched debit transaction", records);
+
+      return res.status(statusCode.Created).json({
+          messages:messages.fetchSuccess,
+          ResponseStatus: responseStatus.success,
+          records: records
+      });
+
+  } catch (error) {
+    console.log(error.message,"error");
+    res.status(statusCode.Bad_request).json({
+      messages: messages.transactionFailure,
+      ResponseStatus: responseStatus.failure,
+      errors: [{
+        path: "other",
+        msg: messages.transactionFailure
+      }]
+    });
+  }
 
 }
